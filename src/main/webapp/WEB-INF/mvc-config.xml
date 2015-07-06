@@ -22,8 +22,7 @@
 
 	<mvc:annotation-driven />
 
-	<mvc:resources mapping="/resources/**" location="/resources/mytheme/" />
-	<mvc:resources mapping="/images/**" location="/images/" />
+	<mvc:resources mapping="/bootstrap/**" location="/bootstrap/" />
 
 
 </beans>
