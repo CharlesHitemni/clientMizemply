@@ -50,7 +50,7 @@
 					<c:if test="${not empty msg}">
 						<div class="msg">${msg}</div>
 					</c:if>
-	                <form name='form-box' action="login" method='POST'>
+	                <form name='form-box' action="redirectLogin" method='POST'>
 						<input type='text' name='login' placeholder="login">
 						<input type='password' name='password' placeholder="mot de passe"/>
 						<button class="btn btn-info btn-block login" type="submit">Login</button> 

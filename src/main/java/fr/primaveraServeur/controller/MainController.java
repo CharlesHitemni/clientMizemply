@@ -5,6 +5,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
+import javax.servlet.http.HttpSession;
+
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
@@ -21,7 +23,7 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 public class MainController {
 
-
+	
 	@RequestMapping(value = "/accueilRiverain", method = RequestMethod.GET)
 	public ModelAndView accueilRiverain() {
 		
@@ -30,6 +32,39 @@ public class MainController {
         model.addObject("message", "Cette page est accessible seulement par les riverains!");
         model.setViewName("accueilRiverain");
         
+        return model;
+	}
+	
+	@RequestMapping(value = "/login", method = RequestMethod.GET)
+	public ModelAndView accueilLogin() {
+		
+		ModelAndView model = new ModelAndView();
+        model.addObject("title", "Accueil Riverain");
+        model.addObject("message", "Cette page est accessible seulement par les riverains!");
+        model.setViewName("login");
+        
+        return model;
+	}
+	
+	@RequestMapping(value = "/redirectLogin", method = RequestMethod.POST)
+	public ModelAndView redirectLogin(HttpSession session, @RequestParam("login") String login, @RequestParam("password") String password) {
+		
+		ModelAndView model = new ModelAndView();
+		session.setAttribute("login", login);
+		
+		if(login.equals("riverain"))
+		{
+			model.setViewName("redirect:accueilRiverain");
+		}	
+		if(login.equals("BTP"))
+		{
+			model.setViewName("redirect:accueilBTP");
+		}
+		
+		if(login.equals("inspecteur"))
+		{
+			model.setViewName("redirect:accueilInspecteur");
+		}
         return model;
 	}
 	
