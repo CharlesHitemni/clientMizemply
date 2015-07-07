@@ -29,7 +29,7 @@ public class TestController
         model.setViewName("accueilInspecteur");
         
         return model;
-	} 
+	}
 	
 	@RequestMapping(value = "/accueilBTP", method = RequestMethod.GET)
 	public ModelAndView accueilBTP() {
@@ -37,7 +37,7 @@ public class TestController
 		ModelAndView model = new ModelAndView();
         model.addObject("title", "Accueil Riverain");
         model.addObject("message", "Cette page est accessible seulement par les riverains!");
-        model.setViewName("accueilBTP");
+        model.setViewName("accueilBTP"); 
         
         return model;
 	}
