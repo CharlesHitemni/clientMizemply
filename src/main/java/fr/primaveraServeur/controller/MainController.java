@@ -113,14 +113,14 @@ public class MainController {
 		String urlService = getUrlServiceFromJson("http://192.168.2.28:8080/registryMairie/rest/registry/findServices/"+action);
 		
 		//On fait appel au service grâce au webService et on écrit la réponse dans un fichier .json
-		getAndWriteResponseIntoFile(urlService);
+		getAndWriteResponseIntoFile("http://192.168.2.28:8080/registryMairie/rest/registry/findServices/"+action);
 		
-		return new ModelAndView("accueilRiverain").addObject("url", urlService);
+		return new ModelAndView("accueilComptable").addObject("url", urlService);
 	}
 
 
 	/**
-	 * Récupère l'url d'un service à partir de son nom en interrogeant le registry
+	 * Récupère l'url d'un service à partir de son nom en interrogeant le registryacti
 	 * 
 	 * @param url
 	 * 		url d'accès au registry avec le nom du service
@@ -192,7 +192,7 @@ public class MainController {
 			String currentDirectory = System.getProperty("user.dir" );
 			
 			//ecriture de l'objet converti dans un fichier .json
-			FileWriter writer = new FileWriter("./containers/contenu.json");
+			FileWriter writer = new FileWriter("/Users/diambe/wildfly-8.2.0.Final/standalone/deployments/clientMizemply.war/containers/contenu.json");
 			writer.write(json);
 			writer.close();
 	 

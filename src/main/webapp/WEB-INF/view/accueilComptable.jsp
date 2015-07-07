@@ -207,10 +207,10 @@
 			function drawRow(rowData) {
 			    var row = $("<tr />");
 			    $("#bodytable").append(row); //this will append tr element to table... keep its reference for a while since we will add cels into it
-			    row.append($("<td>" + rowData.compte + "</td>"));
-			    row.append($("<td>" + rowData.nomCompte + "</td>"));
-			    row.append($("<td>" + rowData.debit + "</td>"));
-			    row.append($("<td>" + rowData.credit + "</td>"));
+			    row.append($("<td>" + rowData.urlService + "</td>"));
+			    row.append($("<td>" + rowData.urlService + "</td>"));
+			    row.append($("<td>" + rowData.urlService + "</td>"));
+			    row.append($("<td>" + rowData.urlService + "</td>"));
 			}
 
 			refreshTableFromJSON();
