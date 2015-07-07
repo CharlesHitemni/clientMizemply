@@ -164,7 +164,7 @@
 				    
 				            <!-- Form actions -->
 				            <div class="form-group">
-				              <div class="col-md-6 text-left">
+				              <div class="col-md-12 text-center">
 				                <button id="clotureMission" name="clotureMission" class="btn btn-success">Clôturer</button>
 				              </div>
 				            </div>
