@@ -60,7 +60,7 @@
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
-          <li class="active"><a href="accueil"><span class="glyphicon glyphicon-home"></span> Accueil</a></li>
+          <li class="active"><a href="accueilRiverain"><span class="glyphicon glyphicon-home"></span> Accueil</a></li>
             <!--  <li><a href="#about">About</a></li> -->
           </ul>
           <ul class="nav navbar-nav navbar-right">
