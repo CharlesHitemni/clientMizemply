@@ -29,7 +29,7 @@ public class TestController
         model.setViewName("accueilInspecteur");
         
         return model;
-	}
+	} 
 	
 	@RequestMapping(value = "/accueilBTP", method = RequestMethod.GET)
 	public ModelAndView accueilBTP() {
