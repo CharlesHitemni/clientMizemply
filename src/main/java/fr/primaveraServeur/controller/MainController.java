@@ -15,23 +15,79 @@ import org.json.JSONObject;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
-public class actionController {
+public class MainController {
 
 
-	//controleur
+	@RequestMapping(value = "/accueilRiverain", method = RequestMethod.GET)
+	public ModelAndView accueilRiverain() {
+		
+		ModelAndView model = new ModelAndView();
+        model.addObject("title", "Accueil Riverain");
+        model.addObject("message", "Cette page est accessible seulement par les riverains!");
+        model.setViewName("accueilRiverain");
+        
+        return model;
+	}
+	
+	@RequestMapping(value = "/accueilInspecteur", method = RequestMethod.GET)
+	public ModelAndView accueilInspecteur() {
+		
+		ModelAndView model = new ModelAndView();
+        model.addObject("title", "Accueil Riverain");
+        model.addObject("message", "Cette page est accessible seulement par les riverains!");
+        model.setViewName("accueilInspecteur");
+        
+        return model;
+	}
+	
+	@RequestMapping(value = "/accueilBTP", method = RequestMethod.GET)
+	public ModelAndView accueilBTP() {
+		
+		ModelAndView model = new ModelAndView();
+        model.addObject("title", "Accueil Riverain");
+        model.addObject("message", "Cette page est accessible seulement par les riverains!");
+        model.setViewName("accueilBTP"); 
+        
+        return model;
+	}
+	
+	@RequestMapping(value = "/accueilComptable", method = RequestMethod.GET)
+	public ModelAndView accueilComptable() {
+		
+		ModelAndView model = new ModelAndView();
+        model.addObject("title", "Accueil Comptable");
+        model.addObject("message", "Cette page est accessible seulement par les comptables!");
+        model.setViewName("accueilComptable");
+        
+        return model;
+	}
 	
 	@RequestMapping(value = "/accueil", method = RequestMethod.GET)
-	public ModelAndView afficheFiche() {
+	public ModelAndView entryPoint(@RequestParam("action") String action) {
 		
-		String urlService = getUrlServiceFromJson("http://192.168.2.28:8080/registryMairie/rest/registry/findServices/serviceRiverain");
+		// La variable action contient le nom du service à appeler
+		// On récupère ensuite l'url du service en faisant appel au registry
+		String urlService = getUrlServiceFromJson("http://192.168.2.28:8080/registryMairie/rest/registry/findServices/"+action);
 		
-		return new ModelAndView("accueil").addObject("url", urlService);
+		//On fait appel au service grâce au webService et on écrit la réponse dans un fichier .json
+		getAndWriteResponseIntoFile(urlService);
+		
+		return new ModelAndView("accueilRiverain").addObject("url", urlService);
 	}
 
 
+	/**
+	 * Récupère l'url d'un service à partir de son nom en interrogeant le registry
+	 * 
+	 * @param url
+	 * 		url d'accès au registry avec le nom du service
+	 * 
+	 * @return l'url du service
+	 */
 	private String getUrlServiceFromJson(String url) {
 		HttpClient client = new DefaultHttpClient();
 		HttpGet request = new HttpGet(url);
@@ -52,13 +108,18 @@ public class actionController {
         } catch (IOException e) {
             e.printStackTrace();
         } catch (JSONException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return urlService;
 	}
 	
-	private void writeResponseIntoFile(String urlService) {
+	/**
+	 * Interroge le webService pour récupérer les données demandées et les écrit dans un fichier (.json)
+	 * 
+	 * @param urlService
+	 * 			l'url du service à appeler
+	 */
+	private void getAndWriteResponseIntoFile(String urlService) {
 		HttpClient client = new DefaultHttpClient();
 		HttpGet request = new HttpGet(urlService);
 		try {
@@ -100,5 +161,4 @@ public class actionController {
 			e.printStackTrace();
 		}
 	}
-
 }
