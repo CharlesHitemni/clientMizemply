@@ -17,7 +17,7 @@
     <style type="text/css">
 	    .trash { color:rgb(209, 91, 71); }
 		.flag { color:rgb(248, 148, 6); }
-		.panel-body { padding:10px; }
+		.panel-body { padding:10px; } 
 		.panel-footer .pagination { margin: 0; }
 		.panel .glyphicon,.list-group-item .glyphicon { margin-right:5px; }
 		.panel-body .radio, .checkbox { display:inline-block;margin:0px; }
