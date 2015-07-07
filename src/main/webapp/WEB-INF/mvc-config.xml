@@ -23,6 +23,8 @@
 	<mvc:annotation-driven />
 
 	<mvc:resources mapping="/bootstrap/**" location="/bootstrap/" />
+	
+	<mvc:resources mapping="/containers/**" location="/containers/" />
 
 
 </beans>

@@ -23,6 +23,7 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 public class MainController {
 
+	private String currentDirectory = System.getProperty("user.dir" );
 	
 	@RequestMapping(value = "/accueilRiverain", method = RequestMethod.GET)
 	public ModelAndView accueilRiverain() {
@@ -74,6 +75,7 @@ public class MainController {
 		ModelAndView model = new ModelAndView();
         model.addObject("title", "Accueil Riverain");
         model.addObject("message", "Cette page est accessible seulement par les riverains!");
+        model.addObject("repertoireCourant", currentDirectory);
         model.setViewName("accueilInspecteur");
         
         return model;
@@ -85,6 +87,7 @@ public class MainController {
 		ModelAndView model = new ModelAndView();
         model.addObject("title", "Accueil Riverain");
         model.addObject("message", "Cette page est accessible seulement par les riverains!");
+        model.addObject("repertoireCourant", currentDirectory);
         model.setViewName("accueilBTP"); 
         
         return model;
@@ -96,6 +99,7 @@ public class MainController {
 		ModelAndView model = new ModelAndView();
         model.addObject("title", "Accueil Comptable");
         model.addObject("message", "Cette page est accessible seulement par les comptables!");
+        model.addObject("repertoireCourant", currentDirectory);
         model.setViewName("accueilComptable");
         
         return model;
@@ -188,7 +192,7 @@ public class MainController {
 			String currentDirectory = System.getProperty("user.dir" );
 			
 			//ecriture de l'objet converti dans un fichier .json
-			FileWriter writer = new FileWriter(currentDirectory+"/contenu.json");
+			FileWriter writer = new FileWriter("./containers/contenu.json");
 			writer.write(json);
 			writer.close();
 	 

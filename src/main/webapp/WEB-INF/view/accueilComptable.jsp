@@ -48,7 +48,7 @@
             <span class="icon-bar"></span>
           </button>
          <img style="min-width: 60px;height: 50px;margin-left: -2px;position: absolute;display: block;" src="./bootstrap/ico/logo_mairie.jpg" alt="">
-         <span class="navbar-brand application-heading">BTP</span>
+         <span class="navbar-brand application-heading">Comptable</span>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
@@ -74,7 +74,7 @@
 	        <div class="col-sm-8">
 	         	<div class="panel panel-default">
 			          <div class="panel-heading">
-			          		<h4>Liste des demandes à inspectées</h4>
+			          		<h4>Ecritures comptables par date</h4>
 			          </div>
 			          <br>
 			          <div class="panel-body">
@@ -86,7 +86,7 @@
 						             <th>Débit</th>
 						             <th>Crédit</th>
 				            	</thead>
-						    	<tbody>
+						    	<tbody id="bodytable">
 <%-- 								    <c:forEach items="${listeDemandeRiverain}" var="demandeRiverain"> --%>
 <!-- 										    <tr> -->
 <%-- 										    	<td>${demandeRiverain.idDemandeRiverain}</td> --%>
@@ -156,7 +156,7 @@
 	        "oLanguage": {
 				"sSearch": "Rechercher:",
 				"sEmptyTable": "Aucune recherche ne correspond à vos critères.",
-				"sInfo": "Page _START_ sur _END_ (_TOTAL_ lignes aux totales) ",
+				"sInfo": "Page _START_ sur _END_ (_TOTAL_ lignes au total) ",
 				"sInfoEmpty": "Aucune recherche ne correspond",
 				"sInfoFiltered": "_MAX_ filtre exécuté",
 				"sLengthMenu": '<div class="form-group"><label class="col-md-3 control-label" for="date">Show</label><div class="col-md-8"><select class="form-control">'+
@@ -177,6 +177,47 @@
 			    }
 			},
 		});
+
+		    function refreshTableFromJSON() {
+				//Interrogation du serveur pour récupérer la réponse JSON
+				$.getJSON( "./containers/contenu.json", function(data) {
+					drawTable(data);
+				});
+			}
+			
+			/**
+			 * //Permet de remplir le tableau avec les données du JSON
+			 * @param data
+			 * 			Les données du tableau
+			 */
+			function drawTable(data) {
+				//On vide le contenu de l'ancien tableau
+				$("#bodytable").html("");
+				//Construction du nouveau tableau
+			    for (var i = 0; i < data.length; i++) {
+			        drawRow(data[i]);
+			    }
+			}
+
+			/**
+			 * Permet d'écrire les lignes d'un tableau
+			 * @param rowData
+			 * 			Les données de la ligne
+			 */
+			function drawRow(rowData) {
+			    var row = $("<tr />");
+			    $("#bodytable").append(row); //this will append tr element to table... keep its reference for a while since we will add cels into it
+			    row.append($("<td>" + rowData.compte + "</td>"));
+			    row.append($("<td>" + rowData.nomCompte + "</td>"));
+			    row.append($("<td>" + rowData.debit + "</td>"));
+			    row.append($("<td>" + rowData.credit + "</td>"));
+			}
+
+			refreshTableFromJSON();
+
+			setInterval(function(){
+				refreshTableFromJSON();
+			}, 5000);
 		</script>
 </body>
 </html>

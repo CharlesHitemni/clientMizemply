@@ -74,7 +74,7 @@
 	        <div class="col-sm-8">
 	         	<div class="panel panel-default">
 			          <div class="panel-heading">
-			          		<h4>Liste des demandes à inspectées</h4>
+			          		<h4>Liste des demandes à prendre en charge</h4>
 			          </div>
 			          <br>
 			          <div class="panel-body">
@@ -216,7 +216,7 @@
 	        "oLanguage": {
 				"sSearch": "Rechercher:",
 				"sEmptyTable": "Aucune recherche ne correspond à vos critères.",
-				"sInfo": "Page _START_ sur _END_ (_TOTAL_ lignes aux totales) ",
+				"sInfo": "Page _START_ sur _END_ (_TOTAL_ lignes au total) ",
 				"sInfoEmpty": "Aucune recherche ne correspond",
 				"sInfoFiltered": "_MAX_ filtre exécuté",
 				"sLengthMenu": '<div class="form-group"><label class="col-md-3 control-label" for="date">Show</label><div class="col-md-8"><select class="form-control">'+
