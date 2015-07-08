@@ -104,14 +104,24 @@
 			value="${_csrf.token}" />
 	</form>
 
-
+	<div class="container">
+		<div class="jumbotron" style="
+   			 padding-top: 2px;
+    		padding-bottom: 5px;">
+			<div class="page-header">
+				<h3>
+					Ecriture comptable de la mairie de mizemply sous séchoir
+				</h3>
+			</div>
+		</div>
+	</div>
 	<div class="jumbotron"
-		style="margin-bottom: 30px; margin-left: 30px; margin-right: 30px; padding: 48px;">
+		style="margin-bottom: 30px; margin-left: 100px; margin-right: 100px; padding: 48px;">
 		<div class="row">
 			<div class="col-sm-12">
 				<div class="panel panel-default">
 					<div class="panel-heading">
-						<h4>Ecritures comptables</h4>
+						<h4>Paiements Inspecteur</h4>
 					</div>
 					<br>
 					<div class="panel-body">
@@ -120,20 +130,50 @@
 								<thead>
 									<th>Date</th>
 									<th>Titre</th>
-									<th>Role</th>
-									<th>Débit</th>
+									<th>Débit (€)</th>
 								</thead>
-								<tbody id="bodytable">
+								<tbody id="bodytableInspecteur">
 									<tr>
 										<td>411000</td>
 										<td>Clients</td>
 										<td>1200</td>
-										<td></td>
 									</tr>
 									<tr>
 										<td>706</td>
 										<td>Prestations de service</td>
-										<td></td>
+										<td>1000</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-sm-12">
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<h4>Paiements Entreprise</h4>
+					</div>
+					<br>
+					<div class="panel-body">
+						<div class="table-responsive">
+							<table id="mytable2" class="table table-bordred table-striped">
+								<thead>
+									<th>Date</th>
+									<th>Titre</th>
+									<th>Débit (€)</th>
+								</thead>
+								<tbody id="bodytableEntreprise">
+									<tr>
+										<td>411000</td>
+										<td>Clients</td>
+										<td>1200</td>
+									</tr>
+									<tr>
+										<td>706</td>
+										<td>Prestations de service</td>
 										<td>1000</td>
 									</tr>
 								</tbody>
@@ -150,7 +190,7 @@
 	
 		$(document).ready(function() {
 	
-		    $('#mytable')
+		    $('#mytable , #mytable2')
 			.removeClass( 'display' )
 			.addClass('table table-striped table-bordered');
 		});
@@ -158,11 +198,11 @@
 		function removeRecord (index) {
 			 var $li = $(this).closest("li");    // Find the row
 			$li.remove();
-		    var $row = $('#mytable').children('tbody').children('tr')[index];    // Find the row
+		    var $row = $('#mytable, #mytable2').children('tbody').children('tr')[index];    // Find the row
 		    $($row).show(); 
 		}
 		
-		    var table = $('#mytable').dataTable({"sPaginationType": "full_numbers",
+		    var table = $('#mytable, #mytable2').dataTable({"sPaginationType": "full_numbers",
 	    	"bLengthChange": true,  
 			"ordering": false,
 			"bInfo" : true	,
@@ -191,27 +231,41 @@
 			},
 		});
 
-		    function refreshTableFromJSON() {
+		    function refreshTableInspecteurFromJSON() {
 				//Interrogation du serveur pour récupérer la réponse JSON
-				$.getJSON( "./containers/paiement.json", function(data) {
-					drawTable(data);
+				$.getJSON( "./containers/paiementInspecteur.json", function(data) {
+					drawTableInspecteur(data);
 				});
 			}
-			
+
+		    function refreshTableEntrepriseFromJSON() {
+				//Interrogation du serveur pour récupérer la réponse JSON
+				$.getJSON( "./containers/paiementEntreprise.json", function(data) {
+					drawTableEntreprise(data);
+				});
+			}
 			/**
 			 * //Permet de remplir le tableau avec les données du JSON
 			 * @param data
 			 * 			Les données du tableau
 			 */
-			function drawTable(data) {
+			function drawTableInspecteur(data) {
 				//On vide le contenu de l'ancien tableau
-				$("#bodytable").html("");
+				$("#bodytableInspecteur").html("");
 				//Construction du nouveau tableau
 			    for (var i = 0; i < data.length; i++) {
 			        drawRow(data[i]);
 			    }
 			}
 
+			function drawTableEntreprise(data) {
+				//On vide le contenu de l'ancien tableau
+				$("#bodytableEntreprise").html("");
+				//Construction du nouveau tableau
+			    for (var i = 0; i < data.length; i++) {
+			        drawRow(data[i]);
+			    }
+			}
 			/**
 			 * Permet d'écrire les lignes d'un tableau
 			 * @param rowData
@@ -222,14 +276,14 @@
 			    $("#bodytable").append(row); //this will append tr element to table... keep its reference for a while since we will add cels into it
 			    row.append($("<td>" + rowData.date + "</td>"));
 			    row.append($("<td>" + rowData.titre + "</td>"));
-			    row.append($("<td>" + rowData.role.nom + "</td>"));
 			    row.append($("<td>" + rowData.montant + "</td>"));
 			}
 
 			refreshTableFromJSON();
 
 			setInterval(function(){
-				refreshTableFromJSON();
+				refreshTableInspecteurFromJSON();
+				refreshTableEntrepriseFromJSON();
 			}, 5000);
 	</script>
 </body>
