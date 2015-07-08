@@ -118,7 +118,8 @@
 				            <div class="form-group">
 				              <label class="col-md-3 control-label" for="objet">Titre</label>
 				              <div class="col-md-9">
-				                <input id="titre" name="titre" type="text" class="form-control" disabled>
+				                <input id="titre" name="titreCache" type="text" class="form-control" disabled>
+				                <input type="hidden" id="titreHidden" name="titre" type="text" />
 				              </div>
 				            </div>
 				    
@@ -126,14 +127,16 @@
 				            <div class="form-group">
 				              <label class="col-md-3 control-label" for="date">Date</label>
 				              <div class="col-md-9">
-				                <input id="date" name="date" type="text" placeholder="xx/xx/xxxx" class="form-control" disabled>
+				               <input id="date" name="dateCache" type="text" placeholder="xx/xx/xxxx" class="form-control" disabled>
+				                <input type="hidden" id="dateHidden" name="date" type="text"  />
 				              </div>
 				            </div>
 				    		
 							<div class="form-group">
 				              <label class="col-md-3 control-label" for="descriptionRiverain">Description riverain</label>
 				              <div class="col-md-9">
-				                <textarea class="form-control" id="descriptionRiverain" name="descriptionRiverain" rows="5" disabled></textarea>
+				                <textarea class="form-control" id="descriptionRiverain" name="descriptionCache" rows="5" disabled></textarea>
+				                <input type="hidden" id="descriptionHidden" name="description"/>
 				              </div>
 				            </div>
 				            <div class="page-header" >
@@ -146,6 +149,7 @@
 				              </div>
 				            </div>
 				    		<input type="hidden" name="role" value="inspecteur">
+				    		<input type="hidden" name="idDemande" id="idDemande">
 				            <!-- Form actions -->
 				            <div class="form-group">
 				              <div class="col-md-6 text-left">
@@ -191,7 +195,7 @@
 			$("#formInspecteur").submit();
 		});
 
-		$('#cloturerMission').click(function () { 
+		$('#clotureMission').click(function () { 
 			$("#formInspecteur").append('<input type="hidden" name="action" value="cloturer"/>');
 			$("#formInspecteur").submit();
 		});
@@ -239,13 +243,18 @@
 				$.getJSON( "./containers/demande_riverain.json", function(data) {
 					drawTable(data);
 					$('.afficheDetail').click(function () {  
-					   	 var $row = $(this).closest("tr");    // Find the row
+						var $row = $(this).closest("tr");    // Find the row
+					   	 var idDemande = $row.find('td').eq(0).text();
 					   	 var titre = $row.find('td').eq(1).text();// Find the text
 					   	 var date = $row.find('td').eq(2).text();
-					   	 var descriptionInspecteur = $row.find('td').eq(4).text();
+					   	 var descriptionRiverain = $row.find('td').eq(4).text();
 					   	 $("#titre").val(titre);
+					   	$("#titreHidden").val(titre);
 					   	 $("#date").val(date);
-					   	 $("#descriptionInspecteur").val(descriptionInspecteur);
+					   	$("#dateHidden").val(date);
+					   	 $("#descriptionRiverain").val(descriptionRiverain);
+					   	$("#descriptionHidden").val(descriptionRiverain);
+					   	$("#idDemande").val(idDemande);
 					 });
 				});
 			}
