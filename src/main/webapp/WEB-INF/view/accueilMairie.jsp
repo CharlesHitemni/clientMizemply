@@ -164,7 +164,7 @@
 				            <div class="form-group">
 				              <label class="col-md-3 control-label" for="descriptionInspecteur">Nombre de paiement</label>
 				              <div class="col-md-9">
-				                <input type="number" class="form-control" id="nombrepaiement" name="nombrepaiement" />
+				                <input type="number" class="form-control" id="nombrepaiement" name="nombrepaiement" min="1"/>
 				              </div>
 				            </div>
 				    		<input type="hidden" name="role" value="mairie">
