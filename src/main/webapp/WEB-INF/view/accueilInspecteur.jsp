@@ -129,7 +129,7 @@
 			          <br>
 			          <div class="panel-body">
 			          
-				          <form class="form-horizontal" action="" method="post">
+				          <form id="formInspecteur" class="form-horizontal" action="routage" method="post">
 				            <!-- Objet input-->
 				            <div class="form-group">
 				              <label class="col-md-3 control-label" for="objet">Titre</label>
@@ -161,7 +161,7 @@
 				                <textarea class="form-control" id="descriptionInspecteur" name="descriptionInspecteur" placeholder="Ajouter vos remarques" rows="5"></textarea>
 				              </div>
 				            </div>
-				    
+				    		<input type="hidden" name="role" value="inspecteur">
 				            <!-- Form actions -->
 				            <div class="form-group">
 				              <div class="col-md-6 text-left">
@@ -181,8 +181,7 @@
 	
 	
 		<script type="text/javascript">
-		
-	
+
 	
 		$(document).ready(function() {
 	
@@ -191,16 +190,26 @@
 			.addClass('table table-striped table-bordered');
 				
 	
-	    $('.afficheDetail').click(function () {  
-		   	 var $row = $(this).closest("tr");    // Find the row
-		   	 var titre = $row.find('td').eq(1).text();// Find the text
-		   	 var date = $row.find('td').eq(2).text();
-		   	 var descriptionRiverain = $row.find('td').eq(4).text();
-		   	 $("#titre").val(titre);
-		   	 $("#date").val(date);
-		   	 $("#descriptionRiverain").val(descriptionRiverain);
-		     });
+// 	    $('.afficheDetail').click(function () {  
+// 		   	 var $row = $(this).closest("tr");    // Find the row
+// 		   	 var titre = $row.find('td').eq(1).text();// Find the text
+// 		   	 var date = $row.find('td').eq(2).text();
+// 		   	 var descriptionRiverain = $row.find('td').eq(4).text();
+// 		   	 $("#titre").val(titre);
+// 		   	 $("#date").val(date);
+// 		   	 $("#descriptionRiverain").val(descriptionRiverain);
+// 		     });
 		 
+		});
+
+		$('#envoyerMission').click(function () { 
+			$("#formInspecteur").append('<input type="hidden" name="action" value="envoyer"/>');
+			$("#formInspecteur").submit();
+		});
+
+		$('#cloturerMission').click(function () { 
+			$("#formInspecteur").append('<input type="hidden" name="action" value="cloturer"/>');
+			$("#formInspecteur").submit();
 		});
 		
 		function removeRecord (index) {
@@ -243,8 +252,17 @@
 
 		    function refreshTableFromJSON() {
 				//Interrogation du serveur pour récupérer la réponse JSON
-				$.getJSON( "./containers/contenu.json", function(data) {
+				$.getJSON( "./containers/demande_riverain.json", function(data) {
 					drawTable(data);
+					$('.afficheDetail').click(function () {  
+					   	 var $row = $(this).closest("tr");    // Find the row
+					   	 var titre = $row.find('td').eq(1).text();// Find the text
+					   	 var date = $row.find('td').eq(2).text();
+					   	 var descriptionInspecteur = $row.find('td').eq(4).text();
+					   	 $("#titre").val(titre);
+					   	 $("#date").val(date);
+					   	 $("#descriptionInspecteur").val(descriptionInspecteur);
+					 });
 				});
 			}
 			
@@ -270,10 +288,12 @@
 			function drawRow(rowData) {
 			    var row = $("<tr />");
 			    $("#bodytable").append(row); //this will append tr element to table... keep its reference for a while since we will add cels into it
-			    row.append($("<td>" + rowData.compte + "</td>"));
-			    row.append($("<td>" + rowData.nomCompte + "</td>"));
-			    row.append($("<td>" + rowData.debit + "</td>"));
-			    row.append($("<td>" + rowData.credit + "</td>"));
+			    row.append($("<td>" + rowData.idDemande + "</td>"));
+			    row.append($("<td>" + rowData.titre + "</td>"));
+			    row.append($("<td>" + rowData.date + "</td>"));
+			    row.append($("<td>" + rowData.adresse + "</td>"));
+			    row.append($("<td hidden>" + rowData.descriptions + "</td>"));
+			    row.append("<td class=' ''><div ><a  class='afficheDetail'><span class='glyphicon glyphicon-arrow-right'></span></a></div></td>");
 			}
 
 			refreshTableFromJSON();

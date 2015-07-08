@@ -84,13 +84,13 @@
 						<div class="msg">${messageSuccess}</div>
 					</c:if>
 				
-				<form:form class="form form-horizontal" method="POST" action="traitementDemande">
+				<form:form class="form form-horizontal" method="POST" action="routage">
 					<div class="form-group">
 						<label class="col-sm-3 control-label" for="titreDemande">Objet
 							de la demande :*</label>
 						<div class="col-sm-6">
 							<input id="objet" class="form-control"
-								placeholder="Titre de la demande" type="text" name="objet"
+								placeholder="Titre de la demande" type="text" name="titre"
 								required="required" />
 						</div>
 					</div>
@@ -109,9 +109,10 @@
 						<div class="col-sm-6">
 							<textarea class="form-control"
 								placeholder="Quel est la demande ?" id="descriptionAlert"
-								name="descriptionDemande" required="required" rows="3"></textarea>
+								name="description" required="required" rows="3"></textarea>
 						</div>
 					</div>
+					<input type="hidden" name="role" value="riverain">
 					<div class="form-group">
 						<div class="col-sm-offset-8 col-xs-offset-8 col-sm-6">
 							<button type="submit" class="btn btn-success">Soumettre</button>

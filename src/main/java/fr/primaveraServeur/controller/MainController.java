@@ -20,10 +20,14 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import fr.primaveraServeur.model.DemandeFront;
+import fr.primaveraServeur.model.User;
+import fr.primaveraServeur.util.PostUtils;
+
 @Controller
 public class MainController {
 
-	private String currentDirectory = System.getProperty("user.dir" );
+	private String path = "/Users/diambe/git/clientMizemply/src/main/webapp/containers/";
 	
 	@RequestMapping(value = "/accueilRiverain", method = RequestMethod.GET)
 	public ModelAndView accueilRiverain() {
@@ -40,8 +44,16 @@ public class MainController {
 	public ModelAndView accueilLogin() {
 		
 		ModelAndView model = new ModelAndView();
-        model.addObject("title", "Accueil Riverain");
-        model.addObject("message", "Cette page est accessible seulement par les riverains!");
+        model.setViewName("login");
+        
+        return model;
+	}
+	
+	@RequestMapping(value = "/logout", method = RequestMethod.GET)
+	public ModelAndView logout(HttpSession session) {
+		
+		ModelAndView model = new ModelAndView();
+		session.removeAttribute("user");
         model.setViewName("login");
         
         return model;
@@ -51,44 +63,72 @@ public class MainController {
 	public ModelAndView redirectLogin(HttpSession session, @RequestParam("login") String login, @RequestParam("password") String password) {
 		
 		ModelAndView model = new ModelAndView();
-		session.setAttribute("login", login);
 		
-		if(login.equals("riverain"))
-		{
-			model.setViewName("redirect:accueilRiverain");
-		}	
-		if(login.equals("BTP"))
-		{
-			model.setViewName("redirect:accueilBTP");
+		String urlService = getUrlServiceFromJson("http://10.10.81.39:8080/registryMairie/rest/registry/findServices/authentification");
+		User user = new User();
+		user.setLogin(login);
+		user.setPassword(password);
+		
+		String resultJson = PostUtils.appelPost(urlService, user);
+		user = PostUtils.convertionJsonEnObject(resultJson, User.class);
+		
+		session.setAttribute("user", user);
+		if(null != user.getLogin()) {
+			if("riverain".equals(user.getRole().getNom())) {
+				model.setViewName("redirect:accueilRiverain");
+			}
+			
+			if("btp".equals(user.getRole().getNom())) {
+				model.setViewName("redirect:accueilBTP");
+			}
+			
+			if("inspecteur".equals(user.getRole().getNom())) {
+				model.setViewName("redirect:accueilInspecteur");
+			}
 		}
-		
-		if(login.equals("inspecteur"))
-		{
-			model.setViewName("redirect:accueilInspecteur");
+		else {
+			model.setViewName("redirect:login");
 		}
         return model;
 	}
 	
 	@RequestMapping(value = "/accueilInspecteur", method = RequestMethod.GET)
-	public ModelAndView accueilInspecteur() {
-		
+	public ModelAndView accueilInspecteur(HttpSession session) {
+		User user = (User)session.getAttribute("user");
 		ModelAndView model = new ModelAndView();
-        model.addObject("title", "Accueil Riverain");
-        model.addObject("message", "Cette page est accessible seulement par les riverains!");
-        model.addObject("repertoireCourant", currentDirectory);
+		String urlService = getUrlServiceFromJson("http://10.10.81.39:8080/registryMairie/rest/registry/findServices/demandeDao-findAllDemandes");
+		
+		String resultJson =  PostUtils.appelPost(urlService, user.getRole());
+		writeJsonIntoFile(resultJson, path+"demande_riverain.json");
+		
         model.setViewName("accueilInspecteur");
         
         return model;
 	}
 	
-	@RequestMapping(value = "/accueilBTP", method = RequestMethod.GET)
-	public ModelAndView accueilBTP() {
-		
+	@RequestMapping(value = "/accueilMairie", method = RequestMethod.GET)
+	public ModelAndView accueilMairie(HttpSession session) {
+//		User user = (User)session.getAttribute("user");
 		ModelAndView model = new ModelAndView();
-        model.addObject("title", "Accueil Riverain");
-        model.addObject("message", "Cette page est accessible seulement par les riverains!");
-        model.addObject("repertoireCourant", currentDirectory);
-        model.setViewName("accueilBTP"); 
+		String urlService = getUrlServiceFromJson("http://10.10.81.39:8080/registryMairie/rest/registry/findServices/demandeDao-findAllDemandes");
+		
+//		String resultJson =  PostUtils.appelPost(urlService, user.getRole());
+//		writeJsonIntoFile(resultJson, path+"demande_riverain.json");
+		
+        model.setViewName("accueilMairie");
+        
+        return model;
+	}
+	
+	@RequestMapping(value = "/accueilBTP", method = RequestMethod.GET)
+	public ModelAndView accueilBTP(HttpSession session) {
+		
+		User user = (User)session.getAttribute("user");
+		ModelAndView model = new ModelAndView();
+		String urlService = getUrlServiceFromJson("http://10.10.81.39:8080/registryMairie/rest/registry/findServices/demandeDao-findAllDemandes");
+		
+		String resultJson =  PostUtils.appelPost(urlService, user.getRole());
+		writeJsonIntoFile(resultJson, path+"demande_inspecteur.json");
         
         return model;
 	}
@@ -97,25 +137,78 @@ public class MainController {
 	public ModelAndView accueilComptable() {
 		
 		ModelAndView model = new ModelAndView();
-        model.addObject("title", "Accueil Comptable");
-        model.addObject("message", "Cette page est accessible seulement par les comptables!");
-        model.addObject("repertoireCourant", currentDirectory);
+//		String urlService = getUrlServiceFromJson("http://192.168.1.241:8080/registryMairie/rest/registry/findServices/demandeDao-findAllDemandes");
+//		String resultJson = getResultService(urlService);
+//		writeJsonIntoFile(resultJson, path+"paiements.json");
         model.setViewName("accueilComptable");
         
         return model;
 	}
 	
-	@RequestMapping(value = "/accueil", method = RequestMethod.GET)
-	public ModelAndView entryPoint(@RequestParam("action") String action) {
+	@RequestMapping(value = "/routage", method = RequestMethod.POST)
+	public ModelAndView entryPoint(@RequestParam(required=false, value="titre") String titre, 
+				@RequestParam(required=false, value="description") String description,
+				@RequestParam(required=false, value="adresse") String adresse, 
+				@RequestParam(value="role") String role,
+				@RequestParam(value="action", required=false) String action, HttpSession session) {
 		
-		// La variable action contient le nom du service à appeler
-		// On récupère ensuite l'url du service en faisant appel au registry
-		String urlService = getUrlServiceFromJson("http://192.168.2.28:8080/registryMairie/rest/registry/findServices/"+action);
+		if(role.equalsIgnoreCase("riverain")) {
+			User user = (User)session.getAttribute("user");
+			DemandeFront demande = new DemandeFront();
+			demande.setTitre(titre);
+			demande.setDescriptions(description);
+			demande.setAdresse(adresse);
+			demande.setLogin(user.getLogin());
+
+			// La variable action contient le nom du service à appeler
+			// On récupère ensuite l'url du service en faisant appel au registry
+			String urlService = getUrlServiceFromJson("http://10.10.81.39:8080/registryMairie/rest/registry/findServices/saveDemandeRiverain");
+			
+			//mizemplyRiverain/rest/riverain/saveDemande
+			PostUtils.appelPost(urlService, demande);
+			
+			return new ModelAndView("redirect:accueilRiverain").addObject("messageSuccess", "Traitement effectué !");
+			
+		}
 		
-		//On fait appel au service grâce au webService et on écrit la réponse dans un fichier .json
-		getAndWriteResponseIntoFile("http://192.168.2.28:8080/registryMairie/rest/registry/findServices/"+action);
+		if(role.equalsIgnoreCase("inspecteur")) {
+			if(action.equalsIgnoreCase("envoyer")) {
+				
+			}
+			else {
+				
+			}
+			String urlService = getUrlServiceFromJson("http://192.168.1.241:8080/registryMairie/rest/registry/findServices/demandeDao-save");
+			
+			PostUtils.appelPost(urlService, null);
+			
+			return new ModelAndView("redirect:accueilInspecteur").addObject("messageSuccess", "Traitement effectué !");
+		}
 		
-		return new ModelAndView("accueilComptable").addObject("url", urlService);
+		if(role.equalsIgnoreCase("btp")) {
+			String urlService = getUrlServiceFromJson("http://192.168.1.241:8080/registryMairie/rest/registry/findServices/demandeDao-save");
+			
+			PostUtils.appelPost(urlService, null);
+			
+			return new ModelAndView("redirect:accueilBTP").addObject("messageSuccess", "Traitement effectué !");
+		}
+		
+//		Demande demande = new Demande();
+//		Description descriptions = new Description();
+//		Role roless = new Role();
+//		role.setIdRole(1);
+//		
+//		descriptions.setDescription(description);
+//		
+//		demande.setTitre(titre);
+//		demande.setAdresse(adresse);
+//		demande.setDescriptions(null);
+//		demande.setRole(role);
+		
+//		//On fait appel au service grâce au webService et on écrit la réponse dans un fichier .json
+//		getAndWriteResponseIntoFile(urlService);
+		
+		return new ModelAndView("page404");
 	}
 
 
@@ -158,25 +251,25 @@ public class MainController {
 	 * @param urlService
 	 * 			l'url du service à appeler
 	 */
-	private void getAndWriteResponseIntoFile(String urlService) {
+	private String getResultService(String urlService) {
 		HttpClient client = new DefaultHttpClient();
 		HttpGet request = new HttpGet(urlService);
+		String result = "";
 		try {
             HttpResponse response = client.execute(request);
             BufferedReader br = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
             String line ="";
-            String result="";
             while ((line = br.readLine()) != null){
                 result += line;
             }
-            //Ecriture de l'objet dans un fichier JSON
-            writeJsonIntoFile(result);
+            
             
 		} catch (ClientProtocolException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
+		return result;
 	}
 	
 	
@@ -186,13 +279,10 @@ public class MainController {
 	 * @param json 
 	 * 		le contenu json à écrire dans le fichier
 	 */
-	private void writeJsonIntoFile(String json) {
+	private void writeJsonIntoFile(String json, String path) {
 		try {
-			//Récupération du répertoire courant
-			String currentDirectory = System.getProperty("user.dir" );
-			
 			//ecriture de l'objet converti dans un fichier .json
-			FileWriter writer = new FileWriter("/Users/diambe/wildfly-8.2.0.Final/standalone/deployments/clientMizemply.war/containers/contenu.json");
+			FileWriter writer = new FileWriter(path);
 			writer.write(json);
 			writer.close();
 	 

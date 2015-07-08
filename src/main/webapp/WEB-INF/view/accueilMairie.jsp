@@ -5,8 +5,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"> 
-	<title>Mizemply Sous Séchoir</title> 
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<title>Mizemply Sous Séchoir</title>
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta name="description" content="">
@@ -48,7 +48,7 @@
             <span class="icon-bar"></span>
           </button>
          <img style="min-width: 60px;height: 50px;margin-left: -2px;position: absolute;display: block;" src="./bootstrap/ico/logo_mairie.jpg" alt="">
-         <span class="navbar-brand application-heading">Comptable</span>
+         <span class="navbar-brand application-heading">Mairie</span>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
@@ -74,17 +74,19 @@
 	        <div class="col-sm-8">
 	         	<div class="panel panel-default">
 			          <div class="panel-heading">
-			          		<h4>Ecritures comptables par date</h4>
+			          		<h4>Liste des demandes à chiffrer</h4>
 			          </div>
 			          <br>
 			          <div class="panel-body">
 				        <div class="table-responsive">
 				            <table id="mytable" class="table table-bordred table-striped">
 				            	<thead>
-					                 <th>N° Compte</th>
-						             <th>Intitulé compte</th>
-						             <th>Débit</th>
-						             <th>Crédit</th>
+					                 <th>Id</th>
+						             <th>titre</th>
+						             <th>Reçu le</th>
+						             <th>Adresse</th>
+						             <th hidden>Description</th>
+						             <th>Sélectionner</th>
 				            	</thead>
 						    	<tbody id="bodytable">
 <%-- 								    <c:forEach items="${listeDemandeRiverain}" var="demandeRiverain"> --%>
@@ -98,16 +100,20 @@
 <!-- 										    </tr> -->
 <%-- 									    </c:forEach> --%>
 									<tr>
-										<td>411000</td>
-										<td>Clients</td>
-										<td>1200</td>
-										<td></td>
+										<td>01</td>
+										<td>coucocu</td>
+										<td>07/10/2015</td>
+										<td>52 rue basly 92600</td>
+										<td hidden>test</td>
+										<td><div ><a  class='afficheDetail'><span class='glyphicon glyphicon-arrow-right'></span></a></div></td>
 									</tr>
 									<tr>
-										<td>706</td>
-										<td>Prestations de service</td>
-										<td></td>
-										<td>1000</td>
+										<td>02</td>
+										<td>cougfhfu</td>
+										<td>07/11/2015</td>
+										<td>52 rue basly 92600</td>
+										<td hidden>test jbfsdj bbefshk bhkghsk</td>
+										<td><div ><a  class='afficheDetail'><span class='glyphicon glyphicon-arrow-right'></span></a></div></td>
 									</tr>
 								</tbody>
 							</table>
@@ -115,11 +121,73 @@
 	        		</div>
 	        	</div>
 			</div>
+			<div class="col-sm-4">
+			        <div class="panel panel-default">
+			          <div class="panel-heading">
+			          		<h4>Informations</h4>
+			          </div>
+			          <br>
+			          <div class="panel-body">
+			          
+				          <form id="formMairie" class="form-horizontal" action="routage" method="post">
+				            <!-- Objet input-->
+				            <div class="form-group">
+				              <label class="col-md-3 control-label" for="objet">Titre</label>
+				              <div class="col-md-9">
+				                <input id="titre" name="titre" type="text" class="form-control" disabled>
+				              </div>
+				            </div>
+				    
+				            <!-- date input-->
+				            <div class="form-group">
+				              <label class="col-md-3 control-label" for="date">Date</label>
+				              <div class="col-md-9">
+				                <input id="date" name="date" type="text" placeholder="xx/xx/xxxx" class="form-control" disabled>
+				              </div>
+				            </div>
+				    		
+							<div class="form-group">
+				              <label class="col-md-3 control-label" for="descriptionRiverain">Description riverain</label>
+				              <div class="col-md-9">
+				                <textarea class="form-control" id="descriptionRiverain" name="descriptionRiverain" rows="5" disabled></textarea>
+				              </div>
+				            </div>
+				            <div class="page-header" >
+							</div>
+				    		
+				            <div class="form-group">
+				              <label class="col-md-3 control-label" for="prix">Prix (€)</label>
+				              <div class="col-md-9">
+				                <input type="text" class="form-control" id="prix" name="prix" placeholder="Prix de la mission" />
+				              </div>
+				            </div>
+				            <div class="form-group">
+				              <label class="col-md-3 control-label" for="descriptionInspecteur">Nombre de paiement</label>
+				              <div class="col-md-9">
+				                <input type="number" class="form-control" id="nombrepaiement" name="nombrepaiement" />
+				              </div>
+				            </div>
+				    		<input type="hidden" name="role" value="mairie">
+				            <!-- Form actions -->
+				            <div class="form-group">
+				              <div class="col-md-6 text-left">
+				                <button id="clotureMission" name="clotureMission" class="btn btn-danger">Clôturer</button>
+				              </div>
+				              <div class="col-md-6 text-right">
+				                <button id="envoyerMission" name="envoyerMission" class="btn btn-success">Envoyer</button>
+				              </div>
+				            </div>
+				          </form>
+			          </div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
 	
 	
 		<script type="text/javascript">
-		
-	
+
 	
 		$(document).ready(function() {
 	
@@ -138,6 +206,16 @@
 		   	 $("#descriptionRiverain").val(descriptionRiverain);
 		     });
 		 
+		});
+
+		$('#envoyerMission').click(function () { 
+			$("#formMairie").append('<input type="hidden" name="action" value="envoyer"/>');
+			$("#formMairie").submit();
+		});
+
+		$('#cloturerMission').click(function () { 
+			$("#formMairie").append('<input type="hidden" name="action" value="cloturer"/>');
+			$("#formMairie").submit();
 		});
 		
 		function removeRecord (index) {
@@ -180,7 +258,7 @@
 
 		    function refreshTableFromJSON() {
 				//Interrogation du serveur pour récupérer la réponse JSON
-				$.getJSON( "./containers/contenu.json", function(data) {
+				$.getJSON( "./containers/demande_riverain.json", function(data) {
 					drawTable(data);
 				});
 			}
@@ -207,10 +285,12 @@
 			function drawRow(rowData) {
 			    var row = $("<tr />");
 			    $("#bodytable").append(row); //this will append tr element to table... keep its reference for a while since we will add cels into it
-			    row.append($("<td>" + rowData.compte + "</td>"));
-			    row.append($("<td>" + rowData.nomCompte + "</td>"));
-			    row.append($("<td>" + rowData.debit + "</td>"));
-			    row.append($("<td>" + rowData.credit + "</td>"));
+			    row.append($("<td>" + rowData.idDemande + "</td>"));
+			    row.append($("<td>" + rowData.titre + "</td>"));
+			    row.append($("<td>" + rowData.date + "</td>"));
+			    row.append($("<td>" + rowData.adresse + "</td>"));
+			    row.append($("<td>" + rowData.descriptions + "</td>"));
+			    row.append("<td><div ><a  class='afficheDetail'><span class='glyphicon glyphicon-arrow-right'></span></a></div></td>");
 			}
 
 			refreshTableFromJSON();

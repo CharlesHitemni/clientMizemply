@@ -88,7 +88,7 @@
 						             <th hidden>Description</th>
 						             <th>Sélectionner</th>
 				            	</thead>
-						    	<tbody>
+						    	<tbody id="bodytable">
 <%-- 								    <c:forEach items="${listeDemandeRiverain}" var="demandeRiverain"> --%>
 <!-- 										    <tr> -->
 <%-- 										    	<td>${demandeRiverain.idDemandeRiverain}</td> --%>
@@ -129,7 +129,7 @@
 			          <br>
 			          <div class="panel-body">
 			          
-				          <form class="form-horizontal" action="" method="post">
+				          <form class="form-horizontal" action="routage" method="post">
 				            <!-- Objet input-->
 				            <div class="form-group">
 				              <label class="col-md-3 control-label" for="objet">Titre</label>
@@ -149,7 +149,7 @@
 							<div class="form-group">
 				              <label class="col-md-3 control-label" for="descriptionInspecteur">Description inspecteur</label>
 				              <div class="col-md-9">
-				                <textarea class="form-control" id="descriptionRiverain" name="descriptionRiverain" rows="5" disabled></textarea>
+				                <textarea class="form-control" id="descriptionInspecteur" name="descriptionInspecteur" rows="5" disabled></textarea>
 				              </div>
 				            </div>
 				            <div class="page-header" >
@@ -161,7 +161,7 @@
 				                <textarea class="form-control" id="descriptionBTP" name="descriptionBTP" placeholder="Ajouter vos remarques" rows="5"></textarea>
 				              </div>
 				            </div>
-				    
+				    		<input type="hidden" name="role" value="btp">
 				            <!-- Form actions -->
 				            <div class="form-group">
 				              <div class="col-md-12 text-center">
@@ -188,15 +188,15 @@
 			.addClass('table table-striped table-bordered');
 				
 	
-	    $('.afficheDetail').click(function () {  
-		   	 var $row = $(this).closest("tr");    // Find the row
-		   	 var titre = $row.find('td').eq(1).text();// Find the text
-		   	 var date = $row.find('td').eq(2).text();
-		   	 var descriptionRiverain = $row.find('td').eq(4).text();
-		   	 $("#titre").val(titre);
-		   	 $("#date").val(date);
-		   	 $("#descriptionRiverain").val(descriptionRiverain);
-		     });
+// 	    $('.afficheDetail').click(function () {  
+// 		   	 var $row = $(this).closest("tr");    // Find the row
+// 		   	 var titre = $row.find('td').eq(1).text();// Find the text
+// 		   	 var date = $row.find('td').eq(2).text();
+// 		   	 var descriptionInspecteur = $row.find('td').eq(4).text();
+// 		   	 $("#titre").val(titre);
+// 		   	 $("#date").val(date);
+// 		   	 $("#descriptionInspecteur").val(descriptionInspecteur);
+// 		     });
 		 
 		});
 		
@@ -237,6 +237,59 @@
 			    }
 			},
 		});
+
+		    function refreshTableFromJSON() {
+				//Interrogation du serveur pour récupérer la réponse JSON
+				$.getJSON( "./containers/demande_inspecteur.json", function(data) {
+					drawTable(data);
+					$('.afficheDetail').click(function () {  
+					   	 var $row = $(this).closest("tr");    // Find the row
+					   	 var titre = $row.find('td').eq(1).text();// Find the text
+					   	 var date = $row.find('td').eq(2).text();
+					   	 var descriptionInspecteur = $row.find('td').eq(4).text();
+					   	 $("#titre").val(titre);
+					   	 $("#date").val(date);
+					   	 $("#descriptionInspecteur").val(descriptionInspecteur);
+					 });
+					 
+				});
+			}
+			
+			/**
+			 * //Permet de remplir le tableau avec les données du JSON
+			 * @param data
+			 * 			Les données du tableau
+			 */
+			function drawTable(data) {
+				//On vide le contenu de l'ancien tableau
+				$("#bodytable").html("");
+				//Construction du nouveau tableau
+			    for (var i = 0; i < data.length; i++) {
+			        drawRow(data[i]);
+			    }
+			}
+
+			/**
+			 * Permet d'écrire les lignes d'un tableau
+			 * @param rowData
+			 * 			Les données de la ligne
+			 */
+			function drawRow(rowData) {
+			    var row = $("<tr />");
+			    $("#bodytable").append(row); //this will append tr element to table... keep its reference for a while since we will add cels into it
+			    row.append($("<td>" + rowData.idDemande + "</td>"));
+			    row.append($("<td>" + rowData.titre + "</td>"));
+			    row.append($("<td>" + rowData.date + "</td>"));
+			    row.append($("<td>" + rowData.adresse + "</td>"));
+			    row.append($("<td hidden>" + rowData.descriptions + "</td>"));
+			    row.append("<td class=' '><div ><a  class='afficheDetail'><span class='glyphicon glyphicon-arrow-right'></span></a></div></td>");
+			}
+
+			refreshTableFromJSON();
+
+			setInterval(function(){
+				refreshTableFromJSON();
+			}, 5000);
 		</script>
 </body>
 </html>
