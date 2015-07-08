@@ -142,11 +142,11 @@
 					</div>
 				</div>
 			</div>
+		</div>
+	</div>
 
 
-			<script type="text/javascript">
-		
-	
+	<script type="text/javascript">
 	
 		$(document).ready(function() {
 	
@@ -231,6 +231,6 @@
 			setInterval(function(){
 				refreshTableFromJSON();
 			}, 5000);
-		</script>
+	</script>
 </body>
 </html>
