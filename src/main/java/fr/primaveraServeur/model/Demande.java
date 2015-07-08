@@ -1,20 +1,8 @@
 package fr.primaveraServeur.model;
 
 import java.io.Serializable;
-import java.util.Set;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 
 /**
@@ -25,52 +13,44 @@ import javax.persistence.Table;
 @Table(name="demande")
 @NamedQuery(name="Demande.findAll", query="SELECT d FROM Demande d")
 public class Demande implements Serializable {
+	private static final long serialVersionUID = 1L;
+
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	@Column(unique=true, nullable=false)
+	@Column(name="id_demande", unique=true, nullable=false)
 	private int idDemande;
 
-	@Column(length=100)
+	@Column(length=255)
 	private String adresse;
 
-	@Column(length=50)
+	@Column(length=10)
 	private String date;
 
-	@Column(columnDefinition = "TINYINT(1)")
-	private boolean open;
+	@Column(length=45)
+	private String description;
+
+	private float montant;
+
+	@Column(name="nombre_paiement")
+	private int nombrePaiement;
 
 	@Column(length=45)
 	private String titre;
+	
+	@Column(columnDefinition="TINYINT(1)")
+	private boolean close;
 
 	//bi-directional many-to-one association to Role
 	@ManyToOne
-	@JoinColumn(name="idrole", nullable=false)
+	@JoinColumn(name="id_role", nullable=false)
 	private Role role;
 
-	//bi-directional many-to-one association to Description
-	@OneToMany(mappedBy="demande", fetch=FetchType.EAGER, cascade = CascadeType.ALL)
-	private Set<Description> descriptions;
-
-	//bi-directional many-to-one association to Paiement
-	@OneToMany(mappedBy="demande",fetch=FetchType.EAGER,cascade=CascadeType.ALL)
-	private Set<Paiement> paiements;
-
 	public Demande() {
-	}
-	
-	public Demande(DemandeFront demandefront) {
-		
-		this.adresse=demandefront.getAdresse();
-		this.date=demandefront.getDate();
-		this.titre=demandefront.getTitre();
-		
 	}
 
 	public int getIdDemande() {
 		return this.idDemande;
 	}
-
-	private static final long serialVersionUID = 1L;
 
 	public void setIdDemande(int idDemande) {
 		this.idDemande = idDemande;
@@ -92,12 +72,28 @@ public class Demande implements Serializable {
 		this.date = date;
 	}
 
-	public boolean isOpen() {
-		return this.open;
+	public String getDescription() {
+		return this.description;
 	}
 
-	public void setOpen(boolean open) {
-		this.open = open;
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public float getMontant() {
+		return this.montant;
+	}
+
+	public void setMontant(float montant) {
+		this.montant = montant;
+	}
+
+	public int getNombrePaiement() {
+		return this.nombrePaiement;
+	}
+
+	public void setNombrePaiement(int nombrePaiement) {
+		this.nombrePaiement = nombrePaiement;
 	}
 
 	public String getTitre() {
@@ -116,20 +112,14 @@ public class Demande implements Serializable {
 		this.role = role;
 	}
 
-	public Set<Description> getDescriptions() {
-		return this.descriptions;
+	public boolean isClose() {
+		return close;
 	}
 
-	public void setDescriptions(Set<Description> descriptions) {
-		this.descriptions = descriptions;
+	public void setClose(boolean close) {
+		this.close = close;
 	}
-
-	public Set<Paiement> getPaiements() {
-		return this.paiements;
-	}
-
-	public void setPaiements(Set<Paiement> paiements) {
-		this.paiements = paiements;
-	}
+	
+	
 
 }

@@ -23,11 +23,14 @@ public class Role implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	@Column(unique=true, nullable=false)
+	@Column(name="id_role", unique=true, nullable=false)
 	private int idRole;
 
 	@Column(length=45)
 	private String nom;
+
+	@Column(length=45)
+	private String password;
 
 	public Role() {
 	}
@@ -48,4 +51,11 @@ public class Role implements Serializable {
 		this.nom = nom;
 	}
 
+	public String getPassword() {
+		return this.password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
 }

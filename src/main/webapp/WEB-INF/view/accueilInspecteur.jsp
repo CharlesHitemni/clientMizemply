@@ -292,7 +292,7 @@
 			    row.append($("<td>" + rowData.titre + "</td>"));
 			    row.append($("<td>" + rowData.date + "</td>"));
 			    row.append($("<td>" + rowData.adresse + "</td>"));
-			    row.append($("<td hidden>" + rowData.descriptions + "</td>"));
+			    row.append($("<td hidden>" + rowData.description + "</td>"));
 			    row.append("<td class=' ''><div ><a  class='afficheDetail'><span class='glyphicon glyphicon-arrow-right'></span></a></div></td>");
 			}
 

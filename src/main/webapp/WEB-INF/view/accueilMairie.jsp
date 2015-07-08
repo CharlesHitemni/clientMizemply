@@ -194,19 +194,6 @@
 		    $('#mytable')
 			.removeClass( 'display' )
 			.addClass('table table-striped table-bordered');
-				
-	
-	    $('.afficheDetail').click(function () {  
-		   	 var $row = $(this).closest("tr");    // Find the row
-		   	 var titre = $row.find('td').eq(1).text();// Find the text
-		   	 var date = $row.find('td').eq(2).text();
-		   	 var descriptionRiverain = $row.find('td').eq(4).text();
-		   	 $("#titre").val(titre);
-		   	 $("#date").val(date);
-		   	 $("#descriptionRiverain").val(descriptionRiverain);
-		     });
-		 
-		});
 
 		$('#envoyerMission').click(function () { 
 			$("#formMairie").append('<input type="hidden" name="action" value="envoyer"/>');
@@ -258,8 +245,19 @@
 
 		    function refreshTableFromJSON() {
 				//Interrogation du serveur pour récupérer la réponse JSON
-				$.getJSON( "./containers/demande_riverain.json", function(data) {
+				$.getJSON( "./containers/demande_mairie.json", function(data) {
 					drawTable(data);
+					$('.afficheDetail').click(function () {  
+					   	 var $row = $(this).closest("tr");    // Find the row
+					   	 var titre = $row.find('td').eq(1).text();// Find the text
+					   	 var date = $row.find('td').eq(2).text();
+					   	 var descriptionRiverain = $row.find('td').eq(4).text();
+					   	 $("#titre").val(titre);
+					   	 $("#date").val(date);
+					   	 $("#descriptionRiverain").val(descriptionRiverain);
+					     });
+					 
+					});
 				});
 			}
 			

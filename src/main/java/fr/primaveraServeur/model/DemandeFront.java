@@ -32,7 +32,7 @@ public class DemandeFront implements Serializable {
 		this.adresse=demande.getAdresse();
 		this.date=demande.getDate();
 		this.titre=demande.getTitre();
-		this.descriptions=getDescriptionInscpeteur(demande.getDescriptions());
+//		this.descriptions=getDescriptionInscpeteur(demande.getDescriptions());
 		
 	}
 	
