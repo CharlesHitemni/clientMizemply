@@ -128,7 +128,7 @@
 				              <label class="col-md-3 control-label" for="date">Date</label>
 				              <div class="col-md-9">
 				                <input id="date" name="date" type="text" placeholder="xx/xx/xxxx" class="form-control" disabled>
-				                <input type="hidden" id="dateHidden" name="date" type="text" placeholder="xx/xx/xxxx" class="form-control" disabled>
+				                <input type="hidden" id="dateHidden" name="date" type="text"  />
 				              </div>
 				            </div>
 				    		
