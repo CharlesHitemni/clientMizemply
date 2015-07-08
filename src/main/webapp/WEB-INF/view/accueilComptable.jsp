@@ -127,18 +127,6 @@
 			.removeClass( 'display' )
 			.addClass('table table-striped table-bordered');
 				
-	
-	    $('.afficheDetail').click(function () {  
-		   	 var $row = $(this).closest("tr");    // Find the row
-		   	 var titre = $row.find('td').eq(1).text();// Find the text
-		   	 var date = $row.find('td').eq(2).text();
-		   	 var descriptionRiverain = $row.find('td').eq(4).text();
-		   	 $("#titre").val(titre);
-		   	 $("#date").val(date);
-		   	 $("#descriptionRiverain").val(descriptionRiverain);
-		     });
-		 
-		});
 		
 		function removeRecord (index) {
 			

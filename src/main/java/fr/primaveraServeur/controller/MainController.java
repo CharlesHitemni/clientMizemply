@@ -20,9 +20,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import fr.primaveraServeur.model.DemandeFront;
+import fr.primaveraServeur.model.Demande;
 import fr.primaveraServeur.model.Role;
-import fr.primaveraServeur.model.User;
 import fr.primaveraServeur.util.PostUtils;
 
 @Controller
@@ -65,7 +64,7 @@ public class MainController {
 		
 		ModelAndView model = new ModelAndView();
 		
-		String urlService = getUrlServiceFromJson("http://10.10.81.39:8080/registryMairie/rest/registry/findServices/authentification");
+		String urlService = getUrlServiceFromJson("http://192.168.1.241:8080/registryMairie/rest/registry/findServices/authentification");
 		Role role = new Role();
 		role.setNom(login);
 		role.setPassword(password);
@@ -79,12 +78,16 @@ public class MainController {
 				model.setViewName("redirect:accueilRiverain");
 			}
 			
-			if("btp".equals(role.getNom())) {
+			if("entreprise".equals(role.getNom())) {
 				model.setViewName("redirect:accueilBTP");
 			}
 			
 			if("inspecteur".equals(role.getNom())) {
 				model.setViewName("redirect:accueilInspecteur");
+			}
+			
+			if("mairie".equals(role.getNom())) {
+				model.setViewName("redirect:accueilMairie");
 			}
 		}
 		else {
@@ -96,10 +99,10 @@ public class MainController {
 	@RequestMapping(value = "/accueilInspecteur", method = RequestMethod.GET)
 	public ModelAndView accueilInspecteur(HttpSession session) {
 		ModelAndView model = new ModelAndView();
-		String urlService = getUrlServiceFromJson("http://10.10.81.39:8080/registryMairie/rest/registry/findServices/findAllDemandesInspecteur");
+		String urlService = getUrlServiceFromJson("http://192.168.1.241:8080/registryMairie/rest/registry/findServices/findAllDemandesInspecteur");
 		
 		String resultJson =  PostUtils.appelGet(urlService);
-		writeJsonIntoFile(resultJson, path+"demande_riverain.json");
+		writeJsonIntoFile(resultJson, path+"demande_mairie.json");
 		
         model.setViewName("accueilInspecteur");
         
@@ -109,10 +112,10 @@ public class MainController {
 	@RequestMapping(value = "/accueilMairie", method = RequestMethod.GET)
 	public ModelAndView accueilMairie(HttpSession session) {
 		ModelAndView model = new ModelAndView();
-		String urlService = getUrlServiceFromJson("http://10.10.81.39:8080/registryMairie/rest/registry/findServices/findAllDemandesMairie");
+		String urlService = getUrlServiceFromJson("http://192.168.1.241:8080/registryMairie/rest/registry/findServices/findAllDemandesMairie");
 		
 		String resultJson =  PostUtils.appelGet(urlService);
-		writeJsonIntoFile(resultJson, path+"demande_mairie.json");
+		writeJsonIntoFile(resultJson, path+"demande_riverain.json");
 		
         model.setViewName("accueilMairie");
         
@@ -123,7 +126,7 @@ public class MainController {
 	public ModelAndView accueilBTP(HttpSession session) {
 		
 		ModelAndView model = new ModelAndView();
-		String urlService = getUrlServiceFromJson("http://10.10.81.39:8080/registryMairie/rest/registry/findServices/findAllDemandesEntreprise");
+		String urlService = getUrlServiceFromJson("http://192.168.1.241:8080/registryMairie/rest/registry/findServices/findAllDemandesEntreprise");
 		
 		String resultJson =  PostUtils.appelGet(urlService);
 		writeJsonIntoFile(resultJson, path+"demande_inspecteur.json");
@@ -135,7 +138,7 @@ public class MainController {
 	public ModelAndView accueilComptable() {
 		
 		ModelAndView model = new ModelAndView();
-//		String urlService = getUrlServiceFromJson("http://10.10.81.39:8080/registryMairie/rest/registry/findServices/demandeDao-findAllDemandes");
+//		String urlService = getUrlServiceFromJson("http://192.168.1.241:8080/registryMairie/rest/registry/findServices/demandeDao-findAllDemandes");
 //		String resultJson = getResultService(urlService);
 //		writeJsonIntoFile(resultJson, path+"paiements.json");
         model.setViewName("accueilComptable");
@@ -151,28 +154,43 @@ public class MainController {
 				@RequestParam(value="action", required=false) String action, HttpSession session) {
 		
 		if(role.equalsIgnoreCase("riverain")) {
-			User user = (User)session.getAttribute("user");
-			DemandeFront demande = new DemandeFront();
+			Role roleUser = (Role) session.getAttribute("role");
+			Demande demande = new Demande();
 			demande.setTitre(titre);
-			demande.setDescriptions(description);
+			demande.setDescription(description);
 			demande.setAdresse(adresse);
-			demande.setLogin(user.getLogin());
+			demande.setRole(roleUser);
 
 			// La variable action contient le nom du service à appeler
 			// On récupère ensuite l'url du service en faisant appel au registry
-			String urlService = getUrlServiceFromJson("http://10.10.81.39:8080/registryMairie/rest/registry/findServices/saveDemandeRiverain");
+			String urlService = getUrlServiceFromJson("http://192.168.1.241:8080/registryMairie/rest/registry/findServices/saveDemandeRiverain");
 			
 			PostUtils.appelPost(urlService, demande);
 			
 			//Une fois la demande enregistrée, on récupère les demandes en base pour les réecrires dans le fichier .json
-			urlService = getUrlServiceFromJson("http://10.10.81.39:8080/registryMairie/rest/registry/findServices/demandeDao-findAllDemandes");
+			urlService = getUrlServiceFromJson("http://192.168.1.241:8080/registryMairie/rest/registry/findServices/findAllDemandesMairie");
 			
-			String resultJson =  PostUtils.appelPost(urlService, new String("inspecteur"));
+			String resultJson =  PostUtils.appelGet(urlService);
 			writeJsonIntoFile(resultJson, path+"demande_riverain.json");
 			
-			return new ModelAndView("redirect:accueilRiverain").addObject("messageSuccess", "Traitement effectué !");
-			
+			return new ModelAndView("redirect:accueilRiverain");
 		}
+		
+		if(role.equalsIgnoreCase("mairie")) {
+			Demande demande = new Demande();
+			if(action.equalsIgnoreCase("envoyer")) {
+				
+			}
+			else {
+				
+			}
+			String urlService = getUrlServiceFromJson("http://192.168.1.241:8080/registryMairie/rest/registry/findServices/demandeDao-save");
+			
+			PostUtils.appelPost(urlService, null);
+			
+			return new ModelAndView("redirect:accueilInspecteur").addObject("messageSuccess", "Traitement effectué !");
+		}
+		
 		
 		if(role.equalsIgnoreCase("inspecteur")) {
 			if(action.equalsIgnoreCase("envoyer")) {

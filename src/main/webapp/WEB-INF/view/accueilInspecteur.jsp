@@ -99,22 +99,6 @@
 <!-- 											    <td><div ><a href='#' class='addAdressList'><span class='glyphicon glyphicon-arrow-right'></span></a></div></td> -->
 <!-- 										    </tr> -->
 <%-- 									    </c:forEach> --%>
-									<tr>
-										<td>01</td>
-										<td>coucocu</td>
-										<td>07/10/2015</td>
-										<td>52 rue basly 92600</td>
-										<td hidden>test</td>
-										<td><div ><a  class='afficheDetail'><span class='glyphicon glyphicon-arrow-right'></span></a></div></td>
-									</tr>
-									<tr>
-										<td>02</td>
-										<td>cougfhfu</td>
-										<td>07/11/2015</td>
-										<td>52 rue basly 92600</td>
-										<td hidden>test jbfsdj bbefshk bhkghsk</td>
-										<td><div ><a  class='afficheDetail'><span class='glyphicon glyphicon-arrow-right'></span></a></div></td>
-									</tr>
 								</tbody>
 							</table>
 						</div>
