@@ -4,11 +4,6 @@ import java.io.Serializable;
 
 import javax.persistence.*;
 
-
-/**
- * The persistent class for the demande database table.
- * 
- */
 @Entity
 @Table(name="demande")
 @NamedQuery(name="Demande.findAll", query="SELECT d FROM Demande d")
